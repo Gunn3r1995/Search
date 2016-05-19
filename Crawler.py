@@ -122,11 +122,11 @@ class Crawler:
             try:
                 for word in stuff.split():
                     word.strip(string.punctuation + string.digits + string.whitespace)
-                    if word not in stop_list and len(word) > 3:
+                    if word not in stop_list:
                         search_term = word
 
                         results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
-                        print('Found the word "{0}" {1} times\n'.format(search_term, len(results)))
+                        print('Found the word "{0}" {1} times'.format(search_term, len(results)))
 
                         url_dict.update({search_term : len(results)})
                         word_dict.update({current_url : url_dict})
@@ -138,6 +138,7 @@ class Crawler:
         elif search_term:
             print('Search term', search_term)
 
+            url_dict = set()
             current_url = url.pop()
 
             print("Current URL", current_url)
@@ -151,42 +152,8 @@ class Crawler:
             results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
             if len(results) > 0:
                 print('Results', len(results))
-                Crawler.url_dict.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
+                url_dict.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
 
-                sorted(Crawler.url_dict)
+                sorted(url_dict)
 
-                print(str(Crawler.url_dict))
-
-                    # print(stuff)
-                    # print(repr(string))
-
-
-
-                '''
-        results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
-        if len(results) > 0:
-            print('Results', len(results))
-            Crawler.url_dict.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
-
-            sorted(Crawler.url_dict)
-
-            print(str(Crawler.url_dict))
-
-        '''
-        '''
-        with open("stop-word-list.txt", 'rt') as file:
-            stop_list = file.read()
-            file.close()
-
-        for sentence in soup.stripped_strings:
-            if sentence not in stop_list:
-                stuff = str(repr(sentence))
-                # split the text
-                words = stuff.split()
-                # for each word in the line:
-                for word in words:
-                    word.strip(string.whitespace + string.digits + string.punctuation)
-                    print(word)
-                    results = soup.find_all(string=re.compile('.*{0}.*'.format(word)), recursive=True)
-                    print('Results', len(results))
-        '''
+                print(str(url_dict))
