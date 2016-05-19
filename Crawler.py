@@ -163,8 +163,8 @@ class Crawler:
             if len(results) > 0:
                 print('Results', len(results))
                 Crawler.url_set.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
-
-                sorted(Crawler.url_set)
-
                 print(str(Crawler.url_set))
-                set_to_file_converter(Crawler.url_set, Crawler.search_file)
+
+                with open(Crawler.indexer_result_file, 'a') as file:
+                    for link in sorted(Crawler.url_set):
+                        file.write(link + '\n')
