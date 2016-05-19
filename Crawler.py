@@ -14,8 +14,11 @@ class Crawler:
     domain_name = ''
     queue_file = ''
     crawled_file = ''
+    search_file = ''
+    indexer_result_file = ''
     queue = set()
     crawled = set()
+    url_set = set()
 
     def __init__(self, folder_name, url, domain_name):
         # Setting Class variables to current values
@@ -24,6 +27,8 @@ class Crawler:
         Crawler.domain_name = domain_name
         Crawler.queue_file = Crawler.folder_name + '/Queue.txt'
         Crawler.crawled_file = Crawler.folder_name + '/Crawled.txt'
+        Crawler.search_file = Crawler.folder_name + '/Search.txt'
+        Crawler.indexer_result_file = Crawler.folder_name + '/Indexer_Result.txt'
         # Creating Directory's and files
         self.create()
         # Starting First Crawl
@@ -97,6 +102,7 @@ class Crawler:
                 Crawler.indexer(search_term, url)
 
 
+
     @staticmethod
     def indexer(search_term, url):
         if not search_term:
@@ -135,10 +141,14 @@ class Crawler:
             except:
                 print("Error")
 
+            # Set to File Converter
+            with open(Crawler.indexer_result_file, 'a') as file:
+                file.write(str(word_dict) + '\n')
+
         elif search_term:
             print('Search term', search_term)
 
-            url_dict = set()
+
             current_url = url.pop()
 
             print("Current URL", current_url)
@@ -152,8 +162,9 @@ class Crawler:
             results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
             if len(results) > 0:
                 print('Results', len(results))
-                url_dict.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
+                Crawler.url_set.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
 
-                sorted(url_dict)
+                sorted(Crawler.url_set)
 
-                print(str(url_dict))
+                print(str(Crawler.url_set))
+                set_to_file_converter(Crawler.url_set, Crawler.search_file)
