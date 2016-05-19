@@ -4,15 +4,15 @@ from Get_Links import GetLinks
 from Crawler import Crawler
 from Create import *
 
-# folder_name = 'ShaneSmithCV'
-folder_name = str(input("Please Enter folder Name: "))
+folder_name = 'ShaneSmithCV'
+# folder_name = str(input("Please Enter folder Name: "))
 print('Folder Name: ', folder_name)
 
-# url = 'http://shanesmithcv.com/'
+url = 'http://shanesmithcv.com/'
 # url = 'https://www.netflix.com/browse'
 # url = 'https://www.facebook.com/'
 
-url = str(input("Please Enter Url e.g. http://shanesmithcv.com/: "))
+# url = str(input("Please Enter Url e.g. http://shanesmithcv.com/: "))
 print('Url: ', url)
 
 domain_name = GetLinks.get_domain_name(url)

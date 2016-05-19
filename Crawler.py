@@ -15,8 +15,7 @@ class Crawler:
     crawled_file = ''
     queue = set()
     crawled = set()
-    url_dict = {}
-    word_dict = {}
+    url_dict = set()
 
     def __init__(self, folder_name, url, domain_name):
         # Setting Class variables to current values
@@ -113,7 +112,8 @@ class Crawler:
         results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
         if len(results) > 0:
             print('Results', len(results))
-            Crawler.url_dict.update({search_term : len(results)})
-            Crawler.word_dict.update({current_url : Crawler.url_dict})
+            Crawler.url_dict.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
 
-            print(Crawler.word_dict)
+            sorted(Crawler.url_dict)
+
+            print(str(Crawler.url_dict))
