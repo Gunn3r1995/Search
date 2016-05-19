@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from Get_Links import GetLinks
 from Create import *
 import re
+import string
 
 
 class Crawler:
@@ -15,7 +16,6 @@ class Crawler:
     crawled_file = ''
     queue = set()
     crawled = set()
-    url_dict = set()
 
     def __init__(self, folder_name, url, domain_name):
         # Setting Class variables to current values
@@ -87,6 +87,7 @@ class Crawler:
 
     @staticmethod
     def read_file():
+        print('If you do not enter word then it will search for all the words on the website')
         search_term = input("Please Enter Word: ")
         url = set()
         print(search_term)
@@ -95,20 +96,73 @@ class Crawler:
                 url.add(line.replace('\n', ''))
                 Crawler.indexer(search_term, url)
 
+
     @staticmethod
     def indexer(search_term, url):
-        print('Search term', search_term)
+        if not search_term:
+            current_url = url.pop()
 
-        current_url = url.pop()
+            print("Current URL", current_url)
 
-        print("Current URL", current_url)
+            url_source_code = requests.get(current_url)
+            # text equals the main text of the source code i.e no headers etc.
+            text = url_source_code.text
+            # change to beautiful soup format
+            soup = BeautifulSoup(text, "html.parser")
 
-        url_source_code = requests.get(current_url)
-        # text equals the main text of the source code i.e no headers etc.
-        text = url_source_code.text
-        # change to beautiful soup format
-        soup = BeautifulSoup(text, "html.parser")
+            with open("stop-word-list.txt", 'rt') as file:
+                stop_list = file.read()
+                file.close()
 
+            index_list = []
+            url_dict = {}
+            word_dict = {}
+            stuff = soup.get_text()
+
+            try:
+                for word in stuff.split():
+                    word.strip(string.punctuation + string.digits + string.whitespace)
+                    if word not in stop_list and len(word) > 3:
+                        search_term = word
+
+                        results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
+                        print('Found the word "{0}" {1} times\n'.format(search_term, len(results)))
+
+                        url_dict.update({search_term : len(results)})
+                        word_dict.update({current_url : url_dict})
+                        index_list.append(word_dict)
+                        print(word_dict)
+            except:
+                print("Error")
+
+        elif search_term:
+            print('Search term', search_term)
+
+            current_url = url.pop()
+
+            print("Current URL", current_url)
+
+            url_source_code = requests.get(current_url)
+            # text equals the main text of the source code i.e no headers etc.
+            text = url_source_code.text
+            # change to beautiful soup format
+            soup = BeautifulSoup(text, "html.parser")
+
+            results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
+            if len(results) > 0:
+                print('Results', len(results))
+                Crawler.url_dict.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
+
+                sorted(Crawler.url_dict)
+
+                print(str(Crawler.url_dict))
+
+                    # print(stuff)
+                    # print(repr(string))
+
+
+
+                '''
         results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
         if len(results) > 0:
             print('Results', len(results))
@@ -117,3 +171,22 @@ class Crawler:
             sorted(Crawler.url_dict)
 
             print(str(Crawler.url_dict))
+
+        '''
+        '''
+        with open("stop-word-list.txt", 'rt') as file:
+            stop_list = file.read()
+            file.close()
+
+        for sentence in soup.stripped_strings:
+            if sentence not in stop_list:
+                stuff = str(repr(sentence))
+                # split the text
+                words = stuff.split()
+                # for each word in the line:
+                for word in words:
+                    word.strip(string.whitespace + string.digits + string.punctuation)
+                    print(word)
+                    results = soup.find_all(string=re.compile('.*{0}.*'.format(word)), recursive=True)
+                    print('Results', len(results))
+        '''

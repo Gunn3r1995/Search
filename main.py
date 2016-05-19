@@ -30,7 +30,7 @@ Crawler(folder_name, url, domain_name)
 # Create worker threads (will die when main exits)
 def create_threads():
     i = 0
-    number_of_threads = 4
+    number_of_threads = 8
     while i < number_of_threads:
         thread = threading.Thread(target=run)
         thread.daemon = True
