@@ -1,10 +1,12 @@
 import requests
+import sys
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from Get_Links import GetLinks
 from Create import *
 import re
 import string
+import sqlite3
 
 
 class Crawler:
@@ -30,6 +32,7 @@ class Crawler:
         Crawler.search_file = Crawler.folder_name + '/Search.txt'
         Crawler.indexer_result_file = Crawler.folder_name + '/Indexer_Result.txt'
         # Creating Directory's and files
+
         self.create()
         # Starting First Crawl
         self.crawl(Crawler.url)
@@ -92,79 +95,109 @@ class Crawler:
 
     @staticmethod
     def read_file():
-        print('If you do not enter word then it will search for all the words on the website')
-        search_term = input("Please Enter Word: ")
         url = set()
-        print(search_term)
+
+
+
         with open(Crawler.crawled_file, 'rt') as file:
             for line in file:
                 url.add(line.replace('\n', ''))
-                Crawler.indexer(search_term, url)
 
+                Crawler.indexer(url)
 
+        search_term = input("Please Enter a Word to Search: ")
+
+        Crawler.database_output(search_term)
 
     @staticmethod
-    def indexer(search_term, url):
-        if not search_term:
+    def indexer(url):
             current_url = url.pop()
-
-            print("Current URL", current_url)
-
             url_source_code = requests.get(current_url)
             # text equals the main text of the source code i.e no headers etc.
             text = url_source_code.text
             # change to beautiful soup format
             soup = BeautifulSoup(text, "html.parser")
 
+            print("Current URL", current_url)
+            url_dict = {}
+
+            # Read In Stop Word List
             with open("stop-word-list.txt", 'rt') as file:
                 stop_list = file.read()
                 file.close()
-
-            index_list = []
-            url_dict = {}
-            word_dict = {}
-            stuff = soup.get_text()
-
+            # Get the html text of the soup file
+            html = soup.get_text()
             try:
-                for word in stuff.split():
+                #splits the html into individual words and loops through for every word
+                for word in html.split():
                     word.strip(string.punctuation + string.digits + string.whitespace)
-                    if word not in stop_list:
+                    if word not in stop_list and word not in url_dict:
                         search_term = word
+                        search_term.strip(string.punctuation + string.digits + string.whitespace)
 
                         results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
                         print('Found the word "{0}" {1} times'.format(search_term, len(results)))
+                        if len(results) >= 1:
+                            url_dict.update({search_term: len(results)})
+                            try:
+                                connect = sqlite3.connect('Indexed_Database.db')
 
-                        url_dict.update({search_term : len(results)})
-                        word_dict.update({current_url : url_dict})
-                        index_list.append(word_dict)
-                        print(word_dict)
+                                cursor = connect.cursor()
+                                cursor.execute("CREATE TABLE IF NOT EXISTS WORDs(Id INTEGER PRIMARY KEY, Url TEXT, words TEXT, WordCount INT);")
+                                all_words = cursor.execute("SELECT Url, words, WordCount FROM WORDs")
+
+                                if word not in all_words:
+                                    cursor.execute("INSERT INTO WORDs VALUES (NULL, ?, ?, ?);",(current_url, search_term, len(results)))
+                                    cursor.execute("SELECT * FROM WORDs LIMIT 1")
+                                    print(cursor.fetchall())
+
+                                    connect.commit()
+                            except sqlite3.Error as e:
+
+                                if connect:
+                                    connect.rollback()
+
+                                print("Error %s:" % e.args[0])
+                                sys.exit(1)
+
+                            finally:
+
+                                if connect:
+                                    connect.close()
             except:
                 print("Error")
+                pass
 
-            # Set to File Converter
-            with open(Crawler.indexer_result_file, 'a') as file:
-                file.write(str(word_dict) + '\n')
+    @staticmethod
+    def database_output(search_term):
 
-        elif search_term:
-            print('Search term', search_term)
+        try:
+            connect = sqlite3.connect('Indexed_Database.db')
+            cursor = connect.cursor()
+            cursor.execute("SELECT Url, Words, WordCount FROM WORDs WHERE Words=? ORDER BY WordCount DESC;", (search_term,))
+
+            output = cursor.fetchall()
+
+            print("Search Term", search_term)
+            print("About Number of Results \n", )
+
+            for lines in output:
+                print(lines)
+
+                print("-----------------------------------\n")
+
+        except sqlite3.Error as e:
+
+            if connect:
+                connect.rollback()
+
+                print("Error %s:" % e.args[0])
+                sys.exit(1)
+
+        finally:
+
+            if connect:
+                connect.close()
 
 
-            current_url = url.pop()
 
-            print("Current URL", current_url)
-
-            url_source_code = requests.get(current_url)
-            # text equals the main text of the source code i.e no headers etc.
-            text = url_source_code.text
-            # change to beautiful soup format
-            soup = BeautifulSoup(text, "html.parser")
-
-            results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
-            if len(results) > 0:
-                print('Results', len(results))
-                Crawler.url_set.add(str(search_term + ' Found ' + str(len(results))) + ' Times at Url: ' + current_url)
-                print(str(Crawler.url_set))
-
-                with open(Crawler.indexer_result_file, 'a') as file:
-                    for link in sorted(Crawler.url_set):
-                        file.write(link + '\n')

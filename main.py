@@ -1,24 +1,18 @@
 import threading
 from queue import Queue
+
 from Get_Links import GetLinks
 from Crawler import Crawler
 from Create import *
 
-
-# folder_name = 'ShaneSmithCV'
-folder_name = str(input("Please Enter folder Name: "))
-print('Folder Name: ', folder_name)
-
-# url = 'http://shanesmithcv.com/'
-# url = 'https://www.netflix.com/browse'
-# url = 'https://www.facebook.com/'
-
-url = str(input("Please Enter Url e.g. http://shanesmithcv.com/: "))
-print('Url: ', url)
+url = input('Please Enter Url, e.g: http://shanesmithcv.com:  ')
+print('Url = ', url)
 
 domain_name = GetLinks.get_domain_name(url)
-queue_file = folder_name + "/Queue.txt"
-crawled_file = folder_name + "/Crawled.txt"
+folder_name = input('Please Enter a Unique Folder Name: ')
+print('Folder Name = ', folder_name)
+queue_file = folder_name + '/Queue.txt'
+crawled_file = folder_name + '/Crawled.txt'
 queue = Queue()
 
 # Initial Crawl
@@ -27,14 +21,8 @@ Crawler(folder_name, url, domain_name)
 # Using this url to figure out some of the basic concepts of multi threading
 # https://docs.python.org/3/library/threading.html
 
-
 # Create worker threads (will die when main exits)
 def create_threads():
-    # output ="Content-type: text/html\n\n"
-    # output += "<html><body>"
-    # output += 'Hello World'
-    # output += "</body></html>"
-    # print(output)
     i = 0
     number_of_threads = 8
     while i < number_of_threads:
