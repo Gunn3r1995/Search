@@ -22,14 +22,17 @@ class GetLinks(HTMLParser):
 
     # Get Links in all start tags using built in function handle_starttag(self, tag, attrs)
     def handle_starttag(self, tag, attrs):
-        # only get tags with a
-        if tag == 'a':
-            for (attribute, value) in attrs:
-                # only get attributes with href
-                if attribute == 'href':
-                    # get and add the url to the links set
-                    url = parse.urljoin(self.base_url, value)
-                    self.links.add(url)
+        try:
+            # only get tags with a
+            if tag == 'a':
+                for (attribute, value) in attrs:
+                    # only get attributes with href
+                    if attribute == 'href':
+                        # get and add the url to the links set
+                        url = parse.urljoin(self.base_url, value)
+                        self.links.add(url)
+        except:
+            print("Error Url may not exist")
 
     # Return Links
     def return_links(self):
