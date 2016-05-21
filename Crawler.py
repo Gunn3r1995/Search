@@ -8,6 +8,7 @@ import string
 import sqlite3
 from tkinter import *
 
+
 class Crawler:
     # initialising Class Variables
     folder_name = ''
@@ -26,16 +27,11 @@ class Crawler:
         # Setting Class variables to current values
         Crawler.folder_name = folder_name
         Crawler.url = url
+        Crawler.queue = set()
         # Creating Directory's and files
         Crawler.domain_name = domain_name
         Crawler.queue_file = folder_name + '/Queue.txt'
         Crawler.crawled_file = folder_name + '/Crawled.txt'
-
-        self.create()
-        # Starting First Crawl
-        self.crawl(url)
-
-
 
     @staticmethod
     def create():
@@ -65,12 +61,10 @@ class Crawler:
     # Convert the human readable links from Get Links to computer Readable links for crawler
     @staticmethod
     def get_links(page_url):
-        html_string = ''
         try:
             response = urlopen(page_url)
-            if response.getheader('Content-Type') == 'text/html':
-                html_bytes = response.read()
-                html_string = html_bytes.decode('utf-8')
+            html_bytes = response.read()
+            html_string = html_bytes.decode('utf-8')
             get_links = GetLinks(Crawler.url, page_url)
             get_links.feed(html_string)
         except:
@@ -135,6 +129,7 @@ class Crawler:
                         # Get the results from the soup file
                         results = soup.find_all(string=re.compile('.*{0}.*'.format(search_term)), recursive=True)
                         print('Found the word "{0}" {1} times'.format(search_term, len(results)))
+
                         # if the length of the results is equal to or greater than 1
                         if len(results) >= 1:
                             # Add to the dictionary the already found words
@@ -149,15 +144,14 @@ class Crawler:
                                 # set all words equal to Url, word, WordCount, from the WORDs Table
                                 all_words = cursor.execute('SELECT Url, word, WordCount FROM WORDs')
                                 # if the word is not in all words continue
-                                if word not in all_words:
-                                    # Insert the current url, search_term and the amount of times the word was found
-                                    cursor.execute('''INSERT INTO WORDs VALUES (NULL, ?, ?, ?);'''
-                                                   , (current_url, search_term, len(results)))
-                                    # select all rows from the table but only show 1 (the last result)
-                                    cursor.execute('SELECT * FROM WORDs ORDER BY Id DESC LIMIT 1')
-                                    print(cursor.fetchall())
-                                    # Commit the changes to the table
-                                    connect.commit()
+                                # Insert the current url, search_term and the amount of times the word was found
+                                cursor.execute('''INSERT INTO WORDs VALUES (NULL, ?, ?, ?);'''
+                                               , (current_url, search_term, len(results)))
+                                # select all rows from the table but only show 1 (the last result)
+                                cursor.execute('SELECT * FROM WORDs ORDER BY Id DESC LIMIT 1')
+                                print(cursor.fetchall())
+                                # Commit the changes to the table
+                                connect.commit()
                             # Except clause to keep the programme running if there is an error
                             except sqlite3.Error as e:
 
@@ -187,7 +181,7 @@ class Crawler:
             output = cursor.fetchall()
 
             print('Search Term', search_term)
-            print('About Number of Results', str(len(output)), '\n')
+            print('About', str(len(output)), 'Number of Results\n')
 
             if len(output) >= 1:
                 for lines in output:
@@ -211,10 +205,45 @@ class Crawler:
 
     @staticmethod
     def init_gui():
+        set_url = set()
 
-        def start_crawl(folder_name, url, domain_name):
+        def initial_crawl(folder_name, url, domain_name):
+            if not os.path.exists(folder_name):
+                Crawler(folder_name, url, domain_name)
+
+                Crawler.create()
+
+                # Starting First Crawl
+                Crawler.crawl(url)
+
+                crawl(folder_name)
+                set_url.add(url)
+                search_engine.update()
+            elif os.path.exists(folder_name):
+                if url not in set_url:
+                    set_url.add(url)
+
+                    Crawler(folder_name, url, domain_name)
+
+                    Crawler.queue.add(url)
+                    # Update the txt Files
+                    set_to_file_converter(Crawler.queue, Crawler.queue_file)
+                    Crawler.crawled = set()
+                    set_to_file_converter(Crawler.crawled, Crawler.crawled_file)
+
+                    Crawler.create()
+
+                    # Starting First Crawl
+                    Crawler.crawl(url)
+
+                    crawl(folder_name)
+                    search_engine.update()
+                else:
+                    print('Url - ', url,  ' Already Crawled')
+                    search_engine.update()
+
+        def crawl(folder_name):
             search_engine.update()
-            Crawler(folder_name, url, domain_name)
 
             import main
             main.create_threads()
@@ -224,8 +253,8 @@ class Crawler:
 
             search_engine.update()
 
-        def search():
-            print('Implement Search')
+        def search(search_term):
+            Crawler.database_output(search_term)
 
         search_engine = Tk()
         search_engine.title('Search Engine')
@@ -234,13 +263,7 @@ class Crawler:
         app = Frame(search_engine)
         app.grid()
 
-        label = Label(app, text='Enter Unique Folder Name')
-        label.pack()
-        label.grid()
-
-        folder_name = Entry(app)
-        folder_name.pack()
-        folder_name.grid()
+        folder_name = 'Search_Results'
 
         label = Label(app, text='Enter Url')
         label.pack()
@@ -251,7 +274,7 @@ class Crawler:
         url.pack()
         url.grid()
 
-        crawl_button = Button(app, text='Start Crawl', command=lambda: start_crawl(folder_name.get(), url.get(), url.get()))
+        crawl_button = Button(app, text='Start Crawl', command=lambda: initial_crawl(folder_name, url.get(), url.get()))
         crawl_button.pack()
         crawl_button.grid()
 
@@ -264,7 +287,7 @@ class Crawler:
         search_term.pack()
         search_term.grid()
 
-        search_button = Button(app, text='Search', command=lambda: search())
+        search_button = Button(app, text='Search', command=lambda: search(search_term.get()))
         search_button.pack()
         search_button.grid()
 

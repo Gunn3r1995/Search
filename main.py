@@ -49,5 +49,3 @@ def crawl(folder_name):
         urls = str(len(queued_set))
         print(urls, ' links in the queue')
         converter_queue(folder_name)
-
-# Crawler.read_file()
