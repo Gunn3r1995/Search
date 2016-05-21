@@ -5,21 +5,11 @@ from Get_Links import GetLinks
 from Crawler import Crawler
 from Create import *
 
-url = input('Please Enter Url, e.g: http://shanesmithcv.com:  ')
-print('Url = ', url)
-
-domain_name = GetLinks.get_domain_name(url)
-folder_name = input('Please Enter a Unique Folder Name: ')
-print('Folder Name = ', folder_name)
-queue_file = folder_name + '/Queue.txt'
-crawled_file = folder_name + '/Crawled.txt'
 queue = Queue()
-
-# Initial Crawl
-Crawler(folder_name, url, domain_name)
 
 # Using this url to figure out some of the basic concepts of multi threading
 # https://docs.python.org/3/library/threading.html
+
 
 # Create worker threads (will die when main exits)
 def create_threads():
@@ -41,23 +31,23 @@ def run():
 
 
 # Each queued link is a new job
-def converter_queue():
+def converter_queue(folder_name):
+    queue_file = folder_name + '/Queue.txt'
     for queue_url in file_to_set_converter(queue_file):
         queue.put(queue_url)
         queue.join()
-        crawl()
+        crawl(folder_name)
 
 
 # Check if there are items in the queue, if so crawl them
-def crawl():
+def crawl(folder_name):
+    queue_file = folder_name + '/Queue.txt'
     # Call file_to_set_converter from Create Class to turn the file to a set
     queued_set = file_to_set_converter(queue_file)
     # If there is 1 or more urls in the set then create job
     if len(queued_set) >= 1:
         urls = str(len(queued_set))
         print(urls, ' links in the queue')
-        converter_queue()
+        converter_queue(folder_name)
 
-create_threads()
-crawl()
-Crawler.read_file()
+# Crawler.read_file()

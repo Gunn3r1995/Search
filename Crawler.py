@@ -4,11 +4,9 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from Get_Links import GetLinks
 from Create import *
-import re
 import string
 import sqlite3
 from tkinter import *
-
 
 class Crawler:
     # initialising Class Variables
@@ -22,21 +20,22 @@ class Crawler:
     queue = set()
     crawled = set()
     url_set = set()
+    console_list = ["Welcome to my simple Search Engine \n"]
 
     def __init__(self, folder_name, url, domain_name):
         # Setting Class variables to current values
         Crawler.folder_name = folder_name
         Crawler.url = url
-        Crawler.domain_name = domain_name
-        Crawler.queue_file = Crawler.folder_name + '/Queue.txt'
-        Crawler.crawled_file = Crawler.folder_name + '/Crawled.txt'
-        Crawler.search_file = Crawler.folder_name + '/Search.txt'
-        Crawler.indexer_result_file = Crawler.folder_name + '/Indexer_Result.txt'
         # Creating Directory's and files
+        Crawler.domain_name = domain_name
+        Crawler.queue_file = folder_name + '/Queue.txt'
+        Crawler.crawled_file = folder_name + '/Crawled.txt'
 
         self.create()
         # Starting First Crawl
-        self.crawl(Crawler.url)
+        self.crawl(url)
+
+
 
     @staticmethod
     def create():
@@ -98,17 +97,15 @@ class Crawler:
     def read_file():
         url = set()
 
-
-
         with open(Crawler.crawled_file, 'rt') as file:
             for line in file:
                 url.add(line.replace('\n', ''))
 
                 Crawler.indexer(url)
 
-        search_term = input("Please Enter a Word to Search: ")
+                search_term = input("Please Enter a Word to Search: ")
 
-        Crawler.database_output(search_term)
+                Crawler.database_output(search_term)
 
     @staticmethod
     def indexer(url):
@@ -188,7 +185,8 @@ class Crawler:
         try:
             connect = sqlite3.connect('Indexed_Database.db')
             cursor = connect.cursor()
-            cursor.execute("SELECT Url, word, WordCount FROM WORDs WHERE word=? ORDER BY WordCount DESC;", (search_term,))
+            cursor.execute("SELECT Url, word, WordCount FROM WORDs WHERE word=? ORDER BY WordCount DESC;",
+                           (search_term,))
 
             output = cursor.fetchall()
 
@@ -214,3 +212,47 @@ class Crawler:
 
             if connect:
                 connect.close()
+
+    @staticmethod
+    def init_gui():
+
+        def start_crawl(folder_name, url, domain_name):
+            search_engine.update()
+            Crawler(folder_name, url, domain_name)
+
+            import main
+            main.create_threads()
+            main.crawl(folder_name)
+            search_engine.update()
+
+        search_engine = Tk()
+        search_engine.title('Search Engine')
+        search_engine.geometry('640x480')
+
+        app = Frame(search_engine)
+        app.grid()
+
+        label = Label(app, text="Enter Unique Folder Name")
+        label.pack()
+        label.grid()
+
+        folder_name = Entry(app)
+        folder_name.pack()
+        folder_name.grid()
+
+        label = Label(app, text="Enter Url")
+        label.pack()
+        label.grid()
+
+        url = Entry(app)
+        url.insert(END, 'http://shanesmithcv.com/')
+        url.pack()
+        url.grid()
+
+        crawl_button = Button(app, text="Start Crawl", command=lambda: start_crawl(folder_name.get(), url.get(), url.get()))
+        crawl_button.pack()
+        crawl_button.grid()
+        
+        search_engine.mainloop()
+
+Crawler.init_gui()
