@@ -20,7 +20,7 @@ class Crawler:
     queue = set()
     crawled = set()
     url_set = set()
-    console_list = ["Welcome to my simple Search Engine \n"]
+    console_list = ['Welcome to my simple Search Engine \n']
 
     def __init__(self, folder_name, url, domain_name):
         # Setting Class variables to current values
@@ -103,10 +103,6 @@ class Crawler:
 
                 Crawler.indexer(url)
 
-                search_term = input("Please Enter a Word to Search: ")
-
-                Crawler.database_output(search_term)
-
     @staticmethod
     def indexer(url):
             current_url = url.pop()
@@ -114,13 +110,13 @@ class Crawler:
             # text equals the main text of the source code i.e no headers etc.
             text = url_source_code.text
             # change to beautiful soup format
-            soup = BeautifulSoup(text, "html.parser")
+            soup = BeautifulSoup(text, 'html.parser')
 
-            print("Current URL", current_url)
+            print('Current URL', current_url)
             url_dict = {}
 
             # Read In Stop Word List
-            with open("stop-word-list.txt", 'rt') as file:
+            with open('stop-word-list.txt', 'rt') as file:
                 stop_list = file.read()
                 file.close()
             # Get the html text of the soup file
@@ -151,14 +147,14 @@ class Crawler:
                                 cursor.execute('''CREATE TABLE IF NOT EXISTS WORDs
                                                   (Id INTEGER PRIMARY KEY, Url TEXT, word TEXT, WordCount INT);''')
                                 # set all words equal to Url, word, WordCount, from the WORDs Table
-                                all_words = cursor.execute("SELECT Url, word, WordCount FROM WORDs")
+                                all_words = cursor.execute('SELECT Url, word, WordCount FROM WORDs')
                                 # if the word is not in all words continue
                                 if word not in all_words:
                                     # Insert the current url, search_term and the amount of times the word was found
                                     cursor.execute('''INSERT INTO WORDs VALUES (NULL, ?, ?, ?);'''
                                                    , (current_url, search_term, len(results)))
                                     # select all rows from the table but only show 1 (the last result)
-                                    cursor.execute("SELECT * FROM WORDs ORDER BY Id DESC LIMIT 1")
+                                    cursor.execute('SELECT * FROM WORDs ORDER BY Id DESC LIMIT 1')
                                     print(cursor.fetchall())
                                     # Commit the changes to the table
                                     connect.commit()
@@ -168,7 +164,7 @@ class Crawler:
                                 if connect:
                                     connect.rollback()
 
-                                print("Error %s:" % e.args[0])
+                                print('Error %s:' % e.args[0])
                                 sys.exit(1)
 
                             finally:
@@ -176,7 +172,7 @@ class Crawler:
                                 if connect:
                                     connect.close()
             except:
-                print("Error")
+                print('Error')
                 pass
 
     @staticmethod
@@ -185,7 +181,7 @@ class Crawler:
         try:
             connect = sqlite3.connect('Indexed_Database.db')
             cursor = connect.cursor()
-            cursor.execute("SELECT Url, word, WordCount FROM WORDs WHERE word=? ORDER BY WordCount DESC;",
+            cursor.execute('SELECT Url, word, WordCount FROM WORDs WHERE word=? ORDER BY WordCount DESC;',
                            (search_term,))
 
             output = cursor.fetchall()
@@ -196,7 +192,7 @@ class Crawler:
             if len(output) >= 1:
                 for lines in output:
                     print(lines)
-                    print("-----------------------------------\n")
+                    print('-----------------------------------\n')
             else:
                 print('Your search -', search_term, '- did not match any documents.')
 
@@ -205,7 +201,7 @@ class Crawler:
             if connect:
                 connect.rollback()
 
-                print("Error %s:" % e.args[0])
+                print('Error %s:' % e.args[0])
                 sys.exit(1)
 
         finally:
@@ -223,7 +219,13 @@ class Crawler:
             import main
             main.create_threads()
             main.crawl(folder_name)
+
+            Crawler.read_file()
+
             search_engine.update()
+
+        def search():
+            print('Implement Search')
 
         search_engine = Tk()
         search_engine.title('Search Engine')
@@ -232,7 +234,7 @@ class Crawler:
         app = Frame(search_engine)
         app.grid()
 
-        label = Label(app, text="Enter Unique Folder Name")
+        label = Label(app, text='Enter Unique Folder Name')
         label.pack()
         label.grid()
 
@@ -240,7 +242,7 @@ class Crawler:
         folder_name.pack()
         folder_name.grid()
 
-        label = Label(app, text="Enter Url")
+        label = Label(app, text='Enter Url')
         label.pack()
         label.grid()
 
@@ -249,10 +251,23 @@ class Crawler:
         url.pack()
         url.grid()
 
-        crawl_button = Button(app, text="Start Crawl", command=lambda: start_crawl(folder_name.get(), url.get(), url.get()))
+        crawl_button = Button(app, text='Start Crawl', command=lambda: start_crawl(folder_name.get(), url.get(), url.get()))
         crawl_button.pack()
         crawl_button.grid()
-        
+
+        label = Label(app, text='Enter a Word to Search')
+        label.pack()
+        label.grid()
+
+        search_term = Entry(app)
+        search_term.insert(END, 'Shane')
+        search_term.pack()
+        search_term.grid()
+
+        search_button = Button(app, text='Search', command=lambda: search())
+        search_button.pack()
+        search_button.grid()
+
         search_engine.mainloop()
 
 Crawler.init_gui()

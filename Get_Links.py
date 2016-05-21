@@ -32,7 +32,7 @@ class GetLinks(HTMLParser):
                         url = parse.urljoin(self.base_url, value)
                         self.links.add(url)
         except:
-            print("Error Url may not exist")
+            print('Error Url may not exist')
 
     # Return Links
     def return_links(self):
