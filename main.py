@@ -1,51 +1,78 @@
-import threading
-from queue import Queue
-
-from Get_Links import GetLinks
-from Crawler import Crawler
+from tkinter import *
+from Indexer import Indexer
 from Create import *
 
-queue = Queue()
 
-# Using this url to figure out some of the basic concepts of multi threading
-# https://docs.python.org/3/library/threading.html
+def init_gui():
+    set_url = set()
 
+    def crawl(max_pages):
+        queue = str(Crawler.queue.pop())
+        console.delete('1.0', END)
+        console.insert(END, 'Currently Crawling' + str(queue) + '\n')
+        search_engine.update()
 
-# Create worker threads (will die when main exits)
-def create_threads():
-    i = 0
-    number_of_threads = 8
-    while i < number_of_threads:
-        thread = threading.Thread(target=run)
-        thread.daemon = True
-        thread.start()
-        i += 1
+        count = int(max_pages)
+        while len(Crawler.queue) > 0 and count > 0:
+            Crawler.crawl(queue)
+            count -= 1
 
+        print('Crawl Finished Can Now Search')
+        console.delete('1.0', END)
+        console.insert(END, 'Crawl Finished Can Now Search\n')
+        console.insert(END, str(len(Crawler.crawled)) + " Url's have been Crawled and Indexed \n")
+        console.insert(END, str(len(Crawler.queue)) + " Total Number of Url's In Queue\n")
+        search_engine.update()
 
-# Do the next job in the queue
-def run():
-    while True:
-        queue_url = queue.get()
-        Crawler.crawl(queue_url)
-        queue.task_done()
+    def search(search_term):
+        search = search_term.lower()
+        print("SEARCH", search_term)
+        Indexer.database_output(search)
 
+    search_engine = Tk()
+    search_engine.title('Search Engine')
+    search_engine.geometry('640x480')
 
-# Each queued link is a new job
-def converter_queue(folder_name):
-    queue_file = folder_name + '/Queue.txt'
-    for queue_url in file_to_set_converter(queue_file):
-        queue.put(queue_url)
-        queue.join()
-        crawl(folder_name)
+    app = Frame(search_engine)
+    app.grid()
 
+    folder_name = 'Search_Results'
 
-# Check if there are items in the queue, if so crawl them
-def crawl(folder_name):
-    queue_file = folder_name + '/Queue.txt'
-    # Call file_to_set_converter from Create Class to turn the file to a set
-    queued_set = file_to_set_converter(queue_file)
-    # If there is 1 or more urls in the set then create job
-    if len(queued_set) >= 1:
-        urls = str(len(queued_set))
-        print(urls, ' links in the queue')
-        converter_queue(folder_name)
+    label = Label(app, text='Enter Url')
+    label.pack()
+    label.grid()
+
+    url = Entry(app)
+    url.insert(END, '10')
+    url.pack()
+    url.grid()
+
+    crawl_button = Button(app, text='Start Crawl', command=lambda: crawl(url.get()))
+    crawl_button.pack()
+    crawl_button.grid()
+
+    label = Label(app, text='Enter a Word to Search')
+    label.pack()
+    label.grid()
+
+    search_term = Entry(app)
+    search_term.insert(END, 'Shane')
+    search_term.pack()
+    search_term.grid()
+
+    search_button = Button(app, text='Search', command=lambda: search(search_term.get()))
+    search_button.pack()
+    search_button.grid()
+
+    console = Text(app)
+    console.pack()
+    console.grid()
+    console.insert(END, str(len(Crawler.crawled)) + " Url's have been Crawled and Indexed \n")
+    console.insert(END, str(len(Crawler.queue)) + " Total Number of Url's In Queue\n")
+
+    search_engine.mainloop()
+
+Create.create_file()
+init_gui()
+Crawler.save_crawl_lists()
+sys.exit(1)
