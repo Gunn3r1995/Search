@@ -72,8 +72,6 @@ class Crawler:
         if not os.path.exists('Search/Queue.txt'):
             file = open('Search/Queue.txt', 'w')
             file.write('http://shanesmithcv.com\n')
-            file.write('https://google.com\n')
-            file.write('https://news.ycombinator.com')
             file.close()
 
             Crawler.read_file('Search/Queue.txt')
