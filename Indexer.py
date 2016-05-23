@@ -33,7 +33,7 @@ class Indexer:
 
                     # if the length of the results is equal to or greater than 1
                     if search_term not in Crawler.stop_list:
-                        if results >= 2 and result <= 35:
+                        if results >= 2:
                             # Add to the dictionary the already found words
                             url_dict.update({search_term: results})
 
