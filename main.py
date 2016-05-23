@@ -23,13 +23,11 @@ def init_gui():
         text.insert(END, str(len(Crawler.crawled)) + " Url's have been Crawled and Indexed \n")
         text.insert(END, str(len(Crawler.queue)) + " Total Number of Url's In Queue\n")
         search_engine.update()
-    '''
-    def search(search_input):
-        search = search_input.lower()
-        print("SEARCH", search_input)
-    '''
+
+        Crawler.save_lists()
 
     def search(search):
+        global connect
         search_term = search.lower()
         try:
             connect = sqlite3.connect('Indexed_Database.db')
@@ -46,7 +44,6 @@ def init_gui():
 
             print('Search Term', search_term)
             print('About', str(len(output)), 'Number of Results\n')
-
             if len(output) >= 1:
                 for lines in output:
                     text.insert(END, str(lines) + '\n\n')
@@ -56,9 +53,9 @@ def init_gui():
                     print(lines)
                     print('-----------------------------------\n')
             else:
-                text.insert('Your search - ' + str(search_term) + ' - did not match any documents.\n')
+                text.insert(END, 'Your search - ' + search_term + ' - did not match any documents.\n')
                 search_engine.update()
-                print('Your search - ', str(search_term), ' - did not match any documents.\n')
+                print('Your search - ' + str(search_term) + ' - did not match any documents.\n')
 
         except sqlite3.Error as e:
 
@@ -100,8 +97,6 @@ def init_gui():
     search_button = Button(window, text='Search', command=lambda: search(search_input.get()))
     search_button.pack()
 
-    # text = Text(window)
-    # text.pack()
     scrollbar = Scrollbar(window)
     scrollbar.pack(side=RIGHT, fill=Y)
 
@@ -119,4 +114,4 @@ Crawler.create_file()
 init_gui()
 
 Crawler.save_lists()
-sys.exit(1)
+sys.exit()

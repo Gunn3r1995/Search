@@ -37,8 +37,6 @@ class Indexer:
                         # Create A table with the rows, Primary Key, Url, word and WordCounts
                         cursor.execute('''CREATE TABLE IF NOT EXISTS WORDs
                                           (Id INTEGER PRIMARY KEY, Url TEXT, word TEXT, WordCount INT);''')
-                        # set all words equal to Url, word, WordCount, from the WORDs Table
-                        all_words = cursor.execute('SELECT Url, word, WordCount FROM WORDs')
                         # if the word is not in all words continue
                         # Insert the current url, search_term and the amount of times the word was found
                         cursor.execute('''INSERT OR IGNORE INTO WORDs VALUES (NULL, ?, ?, ?);'''
