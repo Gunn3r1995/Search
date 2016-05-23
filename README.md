@@ -14,6 +14,10 @@ I believe that this is all you need to have to be able to run Search. if not ple
 
 # Running #
 
+``` bash
+$ python3.5 Main.py
+```
+
 You Can run it straight from Pycharm or any other IDE supporting Python,
 Python Idle or any Terminal like OSX Terminal and Windows CMD
 

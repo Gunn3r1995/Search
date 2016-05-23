@@ -21,7 +21,6 @@ class Indexer:
 
             # splits the html into individual words and loops through for every word
             for word in html.split():
-                # Strings most unwanted characters
                 # check whether the work is not in stop list or already found
                 from Crawler import Crawler
                 if word not in Crawler.stop_list and word not in url_dict:

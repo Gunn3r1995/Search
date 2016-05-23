@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e2171757-9836-4715-9951-90d591658fcf" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Indexed_Database.db" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Search/Crawled.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Search/Queue.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/~$213_Shane_Smith_14809022_Search_Engine.docx" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CI213_Shane_Smith_14809022_Search_Engine.docx" afterPath="$PROJECT_DIR$/CI213_Shane_Smith_14809022_Search_Engine.docx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CI213_Shane_Smith_14809022_Search_Engine.pdf" afterPath="$PROJECT_DIR$/CI213_Shane_Smith_14809022_Search_Engine.pdf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Crawler.py" afterPath="$PROJECT_DIR$/Crawler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Indexer.py" afterPath="$PROJECT_DIR$/Indexer.py" />
     </list>
     <ignored path="Search.iws" />
@@ -32,8 +30,8 @@
       <file leaf-file-name="Indexer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Indexer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2820513">
-              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.8974359">
+              <caret line="42" column="70" selection-start-line="42" selection-start-column="70" selection-end-line="42" selection-end-column="70" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -44,8 +42,8 @@
       <file leaf-file-name="Crawler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Crawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.037037">
-              <caret line="54" column="63" selection-start-line="54" selection-start-column="63" selection-end-line="54" selection-end-column="63" />
+            <state vertical-scroll-proportion="16.11111">
+              <caret line="23" column="79" selection-start-line="23" selection-start-column="72" selection-end-line="23" selection-end-column="79" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -96,8 +94,8 @@
         <option value="$PROJECT_DIR$/Search/stop_word_list.txt" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/Main.py" />
-        <option value="$PROJECT_DIR$/Crawler.py" />
         <option value="$PROJECT_DIR$/Indexer.py" />
+        <option value="$PROJECT_DIR$/Crawler.py" />
       </list>
     </option>
   </component>
@@ -445,12 +443,12 @@
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2494043" sideWeight="0.4941691" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2494043" sideWeight="0.4941691" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.49722" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39863014" sideWeight="0.5059571" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329235" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2494043" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.49722" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2494043" sideWeight="0.5058309" order="2" side_tool="true" content_ui="tabs" />
@@ -472,7 +470,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.4940429" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329235" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4043716" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.49722" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2494043" sideWeight="0.4941691" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -796,13 +794,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Crawler.py">
+    <entry file="file://$PROJECT_DIR$/Search/Queue.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.037037">
-          <caret line="54" column="63" selection-start-line="54" selection-start-column="63" selection-end-line="54" selection-end-column="63" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Search/Crawled.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -816,10 +820,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Crawler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="16.11111">
+          <caret line="23" column="79" selection-start-line="23" selection-start-column="72" selection-end-line="23" selection-end-column="79" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Indexer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2820513">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.8974359">
+          <caret line="42" column="70" selection-start-line="42" selection-start-column="70" selection-end-line="42" selection-end-column="70" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
