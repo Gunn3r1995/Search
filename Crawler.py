@@ -52,19 +52,19 @@ class Crawler:
         if directory == 'Search/Queue.txt':
             with open('Search/Queue.txt', 'rt') as file:
                     for line in file:
-                        Crawler.queue.add(line.replace('\n', ''))
+                        Crawler.queue.add(line.replace('\n', " "))
                     file.close()
 
         if directory == 'Search/Crawled.txt':
             with open('Search/Crawled.txt', 'rt') as file:
                 for line in file:
-                    Crawler.crawled.add(line.replace('\n', ''))
+                    Crawler.crawled.add(line.replace('\n', " "))
                 file.close()
 
         if directory == 'Search/stop_word_list.txt':
             with open('Search/stop_word_list.txt', 'rt') as file:
                 for line in file:
-                    Crawler.stop_list.add(line.replace('\n', ''))
+                    Crawler.stop_list.add(line.replace('\n', " "))
                 file.close()
 
     @staticmethod
@@ -73,6 +73,7 @@ class Crawler:
             file = open('Search/Queue.txt', 'w')
             file.write('http://shanesmithcv.com\n')
             file.write('https://google.com\n')
+            file.write('https://news.ycombinator.com')
             file.close()
 
             Crawler.read_file('Search/Queue.txt')
