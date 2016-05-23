@@ -5,6 +5,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="sys" />
+          <option value="Main.max_pages" />
         </list>
       </option>
     </inspection_tool>

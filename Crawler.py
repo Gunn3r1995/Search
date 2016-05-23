@@ -1,4 +1,5 @@
 import re
+import os
 import urllib.request
 from bs4 import BeautifulSoup
 from Indexer import Indexer
@@ -13,28 +14,29 @@ class Crawler:
     @staticmethod
     def crawl(current_url):
         print('Total in Queue', len(Crawler.queue), '| Total Crawled', len(Crawler.crawled))
-        try:
-            with urllib.request.urlopen(current_url) as response:
-                html = response.read()
+        if '.vhd' not in current_url:
+            try:
+                with urllib.request.urlopen(current_url) as response:
+                    html = response.read()
 
-            soup = BeautifulSoup(html, "html.parser")
-            print(" crawling", current_url)
-            for link in soup.findAll('a', attrs={'href': re.compile("^http")}):
-                href = link.get('href')
-                if href not in Crawler.queue and href not in Crawler.crawled:
-                    Crawler.queue.add(href)
-            Crawler.crawled.add(current_url)
-            Crawler.queue.discard(current_url)
-            Indexer.indexer(current_url, soup)
-            Crawler.save_crawl_lists()
-        except:
-            print("ERROR", current_url)
-            Crawler.queue.discard(current_url)
-            Crawler.save_crawl_lists()
-            pass
+                soup = BeautifulSoup(html, "html.parser")
+                print(" crawling", current_url)
+                for link in soup.findAll('a', attrs={'href': re.compile("^http")}):
+                    href = link.get('href')
+                    if href not in Crawler.queue and href not in Crawler.crawled:
+                        Crawler.queue.add(href)
+                Crawler.crawled.add(current_url)
+                Crawler.queue.discard(current_url)
+                Indexer.indexer(current_url, soup)
+                Crawler.save_lists()
+            except:
+                print("ERROR", current_url)
+                Crawler.queue.discard(current_url)
+                Crawler.save_lists()
+                pass
 
     @staticmethod
-    def save_crawl_lists():
+    def save_lists():
         with open('Search/Queue.txt', 'w') as file:
             for link in Crawler.queue:
                 file.write(link + '\n')
@@ -64,3 +66,26 @@ class Crawler:
                 for line in file:
                     Crawler.stop_list.add(line.replace('\n', ''))
                 file.close()
+
+    @staticmethod
+    def create_file():
+        if not os.path.exists('Search/Queue.txt'):
+            file = open('Search/Queue.txt', 'w')
+            file.write('http://shanesmithcv.com\n')
+            file.write('https://google.com\n')
+            file.close()
+
+            Crawler.read_file('Search/Queue.txt')
+        else:
+            Crawler.read_file('Search/Queue.txt')
+
+        if not os .path.isfile('Search/Crawled.txt'):
+            file = open('Search/Crawled.txt', 'w')
+            file.write('')
+            file.close()
+
+            Crawler.read_file('Search/Crawled.txt')
+        else:
+            Crawler.read_file('Search/Crawled.txt')
+
+        Crawler.read_file('Search/stop_word_list.txt')

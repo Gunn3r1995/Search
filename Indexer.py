@@ -1,8 +1,6 @@
-import re
-import sys
 import string
 import sqlite3
-
+from tkinter import *
 
 class Indexer:
 
@@ -33,7 +31,6 @@ class Indexer:
                     if len(results) >= 1:
                         # Add to the dictionary the already found words
                         url_dict.update({search_term: len(results)})
-                        #try:
                         # Connect to the Database
                         connect = sqlite3.connect('Indexed_Database.db')
                         cursor = connect.cursor()
@@ -51,37 +48,3 @@ class Indexer:
                         print(cursor.fetchall())
                         # Commit the changes to the table
                         connect.commit()
-
-    @staticmethod
-    def database_output(search_term):
-
-        try:
-            connect = sqlite3.connect('Indexed_Database.db')
-            cursor = connect.cursor()
-            cursor.execute('SELECT Url, word, WordCount FROM WORDs WHERE word=? ORDER BY WordCount DESC;',
-                           (search_term,))
-
-            output = cursor.fetchall()
-
-            print('Search Term', search_term)
-            print('About', str(len(output)), 'Number of Results\n')
-
-            if len(output) >= 1:
-                for lines in output:
-                    print(lines)
-                    print('-----------------------------------\n')
-            else:
-                print('Your search -', search_term, '- did not match any documents.')
-
-        except sqlite3.Error as e:
-
-            if connect:
-                connect.rollback()
-
-                print('Error %s:' % e.args[0])
-                sys.exit(1)
-
-        finally:
-
-            if connect:
-                connect.close()
